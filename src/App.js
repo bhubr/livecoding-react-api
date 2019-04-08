@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import UserList from './UserList';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: []
+    };
+    this.fetchGithubUsers = this.fetchGithubUsers.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("le composant a été inséré");
+    this.fetchGithubUsers();
+  }
+
+  fetchGithubUsers() {
+    fetch('https://api.github.com/users')
+      .then(res => res.json())
+      .then(users => this.setState({
+        users: users
+      }));
+  }
+
   render() {
+    console.log("le composant a été affiché");
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <h1>API</h1>
+      <button onClick={this.fetchGithubUsers}>
+        Get users
+      </button>
+
+      <UserList users={this.state.users} />
       </div>
     );
   }
